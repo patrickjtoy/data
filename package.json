@@ -1,0 +1,18 @@
+{
+  "name": "patrickjtoy.data",
+  "version": "1.0.0",
+  "description": "Simple immutable data structures in Javascript",
+  "main": "./src/index.js",
+  "author": "Patrick J Toy",
+  "license": "MIT",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "babel src -d lib"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3"
+  }
+}
