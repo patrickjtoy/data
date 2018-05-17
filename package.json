@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Simple immutable data structures in Javascript",
   "main": "./src/index.js",
+  "repository": "https://github.com/patrickjtoy/data",
   "author": "Patrick J Toy",
   "license": "MIT",
   "files": [
@@ -13,6 +14,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3"
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0"
   }
 }
