@@ -1,17 +1,28 @@
-import Tuple from "./Tuple.js";
+import { describe, expect } from "./_testRunner"
+import Tuple, { first, second, mapFirst, mapSecond } from "./Tuple.js"
 
-const expect = (expected, actual) => {
-    if (expected === actual) console.log("Success!")
-    else console.error(`Failure: expected '${actual}' to equal '${expected}', but it does not!`)
-}
+describe("Tuple", () => {
+    const tuple = Tuple(1, "one")
 
-const t = Tuple.of(1, "one")
+    describe("it works with Tuple's constructor", () => {
+        expect(
+            Tuple(1, 1).constructor.prototype,
+            Tuple.of(1, 1).constructor.prototype
+        )
+    })
 
-// Verify correct values
-expect(1, Tuple.first(t))
-expect("one", Tuple.second(t))
+    describe("it works with Tuple's value extractors", () => {
+        expect(1, first(tuple))
+        expect("one", second(tuple))
+    })
 
-// Ensure immutability
-t._values = [2, "two"]
-expect(1, Tuple.first(t))
-expect("one", Tuple.second(t))
+    describe("it prevents mutations", () => {
+        expect(1, first(tuple))
+        expect("one", second(tuple))
+    })
+
+    describe("it maps values correctly", () => {
+        expect(2, first(mapFirst(n => n + 1, tuple)))
+        expect("ONE", second(mapSecond(s => s.toUpperCase(), tuple)))
+    })
+})
