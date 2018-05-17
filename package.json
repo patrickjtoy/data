@@ -1,20 +1,25 @@
 {
-  "name": "patrickjtoy.data",
-  "version": "1.0.0",
-  "description": "Simple immutable data structures in Javascript",
-  "main": "./src/index.js",
-  "repository": "https://github.com/patrickjtoy/data",
-  "author": "Patrick J Toy",
-  "license": "MIT",
-  "files": [
-    "lib"
-  ],
-  "scripts": {
-    "build": "babel src -d lib"
-  },
-  "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-preset-env": "^1.7.0"
-  }
+    "name": "patrickjtoy.data",
+    "version": "1.0.0",
+    "description": "Simple immutable data structures in Javascript",
+    "main": "./src/index.js",
+    "repository": "https://github.com/patrickjtoy/data",
+    "author": "Patrick J Toy",
+    "license": "MIT",
+    "files": [
+        "lib"
+    ],
+    "scripts": {
+        "build": "babel src -d lib",
+        "test-boolean": "node lib/Boolean.spec.js",
+        "test-list": "node lib/List.spec.js",
+        "test-tuple": "node lib/Tuple.spec.js",
+        "test": "yarn build ; yarn test-boolean ; yarn test-list ; yarn test-tuple"
+    },
+    "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-core": "^6.26.3",
+        "babel-preset-env": "^1.7.0",
+        "colors": "^1.2.5"
+    }
 }
