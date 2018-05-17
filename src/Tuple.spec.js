@@ -1,4 +1,4 @@
-import Tuple from "./index.js";
+import Tuple from "./Tuple.js";
 
 const expect = (expected, actual) => {
     if (expected === actual) console.log("Success!")

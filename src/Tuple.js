@@ -8,12 +8,12 @@ const Tuple = function Tuple(first, second) {
     const _values = [first, second]
 
     // Return the first of the Tuple pair
-    this.getFirst = function () {
+    this._getFirst = function () {
         return _values[0]
     }
 
     // Return the second of the Tuple pair
-    this.getSecond = function () {
+    this._getSecond = function () {
         return _values[1]
     }
 }
@@ -28,10 +28,10 @@ Tuple.prototype.toString = function () {
 const of = (first, second) => new Tuple(first, second)
 
 // first : Tuple a b -> a
-const first = (tuple) => tuple.getFirst()
+const first = (tuple) => tuple._getFirst()
 
 // second : Tuple a b -> b
-const second = (tuple) => tuple.getSecond()
+const second = (tuple) => tuple._getSecond()
 
 // mapFirst : (a -> b) -> Tuple a b -> Tuple b b
 const mapFirst = (mapper, tuple) => of(mapper(tuple.getFirst()), tuple.getSecond())
