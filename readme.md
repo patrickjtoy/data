@@ -1,14 +1,13 @@
-patrickjtoy.data
-================
-
-## Simple immutable data structures in Javascript
+#### Simple immutable data structures in Javascript
 
 Completed:
-    * Tuple
+
+* Tuple
 
 Todo:
-    * List
-    * Dict
-    * Result
-    * Maybe
-    * ...
+
+* List
+* Dict
+* Result
+* Maybe
+* ...
