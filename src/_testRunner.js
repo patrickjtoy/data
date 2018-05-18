@@ -1,6 +1,5 @@
 import colors from "colors/safe"
-import { ifElse, areEqual } from "./_utils"
-import { isTrue } from "./Boolean"
+import { isTrue, ifElse, areEqual } from "./Boolean"
 
 let counter = 0
 
