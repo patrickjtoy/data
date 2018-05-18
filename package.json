@@ -6,15 +6,15 @@
     "repository": "https://github.com/patrickjtoy/data",
     "author": "Patrick J Toy",
     "license": "MIT",
-    "files": [
-        "lib"
-    ],
+    "files": ["lib"],
     "scripts": {
         "build": "babel src -d lib",
         "test-boolean": "node lib/Boolean.spec.js",
+        "test-number": "node lib/Number.spec.js",
         "test-list": "node lib/List.spec.js",
         "test-tuple": "node lib/Tuple.spec.js",
-        "test": "yarn build ; yarn test-boolean ; yarn test-list ; yarn test-tuple"
+        "test":
+            "yarn build ; yarn test-boolean ; yarn test-number ; yarn test-list ; yarn test-tuple"
     },
     "devDependencies": {
         "babel-cli": "^6.26.0",
