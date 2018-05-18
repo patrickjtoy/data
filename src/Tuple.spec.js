@@ -1,28 +1,31 @@
-import { describe, expect } from "./_testRunner"
-import Tuple, { first, second, mapFirst, mapSecond } from "./Tuple.js"
+import { describe, assert, expect } from "./_testRunner"
+import Tuple, { first, second, mapFirst, mapSecond, isTuple } from "./Tuple.js"
 
 describe("Tuple", () => {
-    const tuple = Tuple(1, "one")
+    describe("it creates a Tuple", () => {
+        const tuple = Tuple(1, "one")
 
-    describe("it works with Tuple's constructor", () => {
-        expect(
-            Tuple(1, 1).constructor.prototype,
-            Tuple.of(1, 1).constructor.prototype
-        )
+        expect(isTuple, tuple)
     })
 
     describe("it works with Tuple's value extractors", () => {
-        expect(1, first(tuple))
-        expect("one", second(tuple))
+        const tuple = Tuple(1, "one")
+
+        assert(1, first(tuple))
+        assert("one", second(tuple))
     })
 
     describe("it prevents mutations", () => {
-        expect(1, first(tuple))
-        expect("one", second(tuple))
+        const tuple = Tuple(1, "one")
+
+        assert(1, first(tuple))
+        assert("one", second(tuple))
     })
 
     describe("it maps values correctly", () => {
-        expect(2, first(mapFirst(n => n + 1, tuple)))
-        expect("ONE", second(mapSecond(s => s.toUpperCase(), tuple)))
+        const tuple = Tuple(1, "one")
+
+        assert(2, first(mapFirst(n => n + 1, tuple)))
+        assert("ONE", second(mapSecond(s => s.toUpperCase(), tuple)))
     })
 })

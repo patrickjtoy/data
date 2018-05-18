@@ -1,5 +1,7 @@
 // module Tuple exposing (of, first, second, mapFirst, mapSecond)
 
+import Boolean from "./Boolean"
+
 const Tuple = function Tuple(first, second) {
     if (first == null || second == null)
         throw new TypeError("A minimum of two values are required.")
@@ -25,22 +27,25 @@ Tuple.prototype.toString = function() {
     return `Tuple(${f}, ${s})`
 }
 
-// Tuple.of : a -> b -> Tuple a b
-Tuple.of = (first, second) => Tuple(first, second)
+// toTuple :: a -> b -> Tuple a b
+const toTuple = (first, second) => Tuple(first, second)
 
-// first : Tuple a b -> a
+// first :: Tuple a b -> a
 const first = tuple => tuple._getFirst()
 
-// second : Tuple a b -> b
+// second :: Tuple a b -> b
 const second = tuple => tuple._getSecond()
 
-// mapFirst : (a -> b) -> Tuple a b -> Tuple b b
+// mapFirst :: (a -> b) -> Tuple a b -> Tuple b b
 const mapFirst = (mapper, tuple) =>
     Tuple(mapper(tuple._getFirst()), tuple._getSecond())
 
-// mapSecond : (b -> c) -> Tuple a b -> Tuple a c
+// mapSecond :: (b -> c) -> Tuple a b -> Tuple a c
 const mapSecond = (mapper, tuple) =>
     Tuple(tuple._getFirst(), mapper(tuple._getSecond()))
 
-export default Tuple
-export { first, second, mapFirst, mapSecond }
+// isTuple :: a -> Boolean
+const isTuple = value => Boolean(value instanceof Tuple)
+
+export default toTuple
+export { first, second, mapFirst, mapSecond, isTuple }

@@ -1,9 +1,11 @@
 // module List
 
+import Boolean from "./Boolean"
+
 const Nil = "Nil"
 
-const List = function List(...xs) {
-    if (!(this instanceof List)) return new List(...xs)
+const List = function List(xs) {
+    if (!(this instanceof List)) return new List(xs)
 
     if (xs == null) throw new TypeError("Cannot create a List of 'null'")
 
@@ -19,7 +21,7 @@ const List = function List(...xs) {
         const t = xs.slice(1)
 
         _head = xs[0]
-        _tail = t[0] instanceof List ? t[0] : new List(...t)
+        _tail = t[0] instanceof List ? t[0] : new List(t)
     }
 
     this._getHead = function() {
@@ -39,8 +41,20 @@ List.prototype.toString = function() {
     return `List(${h}, ${t.toString()})`
 }
 
-// List.of :: Array a -> List a
-List.of = (...xs) => List(...xs)
+// toList :: Array a -> List a
+const toList = (...xs) => List(xs)
+
+// fromList_ :: Array a -> List a -> Array a
+const fromList_ = (acc, list) => {
+    if (list._getTail() === Nil) return acc.concat([list._getHead()])
+    return fromList_(acc.concat([list._getHead()]), list._getTail())
+}
+
+// toArray :: List a -> Array a
+const fromList = list => fromList_([], list)
+
+// isList :: a -> Boolean
+const isList = value => Boolean(value instanceof List)
 
 // head :: List a -> ?a
 const head = list => list._getHead()
@@ -48,17 +62,8 @@ const head = list => list._getHead()
 // tail :: List a -> List a
 const tail = list => list._getTail()
 
-// toArray_ :: Array a -> List a -> Array a
-const toArray_ = (acc, list) => {
-    if (list._getTail() === Nil) return acc.concat([list._getHead()])
-    return toArray_(acc.concat([list._getHead()]), list._getTail())
-}
-
-// toArray :: List a -> Array a
-const toArray = list => toArray_([], list)
-
 // cons :: a -> List a -> List a
-const cons = (x, list) => List(x, list)
+const cons = (x, list) => toList(x, list)
 
 // isEmpty :: List a -> boolean
 const isEmpty = list => list._getHead() === Nil
@@ -78,5 +83,5 @@ const length = list => {
 //     reverse(list._getTail()) `concat` List(list._getHead())
 // }
 
-export default List
-export { isEmpty, head, tail, length, cons, toArray }
+export default toList
+export { fromList, isList, isEmpty, head, tail, length, cons }

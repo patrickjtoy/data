@@ -8,25 +8,33 @@ const Boolean = function Boolean(x) {
     this._getValue = () => x
 }
 
+// True :: () => Boolean
 const True = function True() {
     if (!(this instanceof True)) return new True()
-}
-True.prototype = Boolean(true)
 
+    Boolean.call(this, true)
+}
+True.prototype = Object.create(Boolean.prototype)
+
+// False :: () => Boolean
 const False = function False() {
     if (!(this instanceof False)) return new False()
+
+    Boolean.call(this, false)
 }
-False.prototype = Boolean(false)
+False.prototype = Object.create(Boolean.prototype)
 
-// Boolean.of :: boolean -> Boolean
-Boolean.of = boolean => (boolean === true ? True() : False())
+// toBoolean :: boolean -> Boolean
+const toBoolean = jsBool => (jsBool === true ? True() : False())
 
-// isTrue :: Boolean -> boolean
-const isTrue = boolean => boolean instanceof Boolean && boolean instanceof True
+// fromBoolean :: Boolean -> boolean
+const fromBoolean = boolean => boolean instanceof True
 
-// isFalse :: Boolean -> boolean
-const isFalse = boolean =>
-    boolean instanceof Boolean && boolean instanceof False
+// isTrue :: Boolean -> Boolean
+const isTrue = boolean => toBoolean(boolean instanceof True)
 
-export default Boolean
-export { True, False, isTrue, isFalse }
+// isFalse :: Boolean -> Boolean
+const isFalse = boolean => toBoolean(boolean instanceof False)
+
+export default toBoolean
+export { fromBoolean, True, False, isTrue, isFalse }
