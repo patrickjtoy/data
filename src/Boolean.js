@@ -15,6 +15,9 @@ const True = function True() {
     Boolean.call(this, true)
 }
 True.prototype = Object.create(Boolean.prototype)
+True.prototype.toString = function() {
+    return `Boolean(True)`
+}
 
 // False :: () => Boolean
 const False = function False() {
@@ -23,6 +26,9 @@ const False = function False() {
     Boolean.call(this, false)
 }
 False.prototype = Object.create(Boolean.prototype)
+False.prototype.toString = function() {
+    return `Boolean(False)`
+}
 
 // toBoolean :: boolean -> Boolean
 const toBoolean = jsBool => (jsBool === true ? True() : False())
