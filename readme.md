@@ -2,12 +2,18 @@
 
 Completed:
 
-* Tuple
+*   Tuple
+*   Boolean
+
+In Progress:
+
+*   List
+*   Number
+*   Enum
 
 Todo:
 
-* List
-* Dict
-* Result
-* Maybe
-* ...
+*   Dict
+*   Result
+*   Maybe
+*   ...
