@@ -10,11 +10,12 @@
     "scripts": {
         "build": "babel src -d lib",
         "test-boolean": "node lib/Boolean.spec.js",
+        "test-enum": "node lib/Enum.spec.js",
         "test-number": "node lib/Number.spec.js",
         "test-list": "node lib/List.spec.js",
         "test-tuple": "node lib/Tuple.spec.js",
         "test":
-            "yarn build ; yarn test-boolean ; yarn test-number ; yarn test-list ; yarn test-tuple"
+            "yarn build ; yarn test-boolean ; yarn test-enum ; yarn test-number ; yarn test-list ; yarn test-tuple"
     },
     "devDependencies": {
         "babel-cli": "^6.26.0",
