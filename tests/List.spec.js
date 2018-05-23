@@ -1,5 +1,14 @@
 import { describe, assert, expect } from "./_testRunner"
-import List, { fromList, isList, isEmpty, length, cons } from "./List"
+import { isTrue, isFalse } from "./Boolean"
+import List, {
+    fromList,
+    isList,
+    isEmpty,
+    areEqual,
+    length,
+    cons,
+    map
+} from "./List"
 
 describe("List", () => {
     describe("it creates a List", () => {
@@ -9,8 +18,17 @@ describe("List", () => {
     })
 
     describe("it can identify an empty list", () => {
-        assert(true, isEmpty(List()))
-        assert(false, isEmpty(List(1)))
+        expect(isTrue, isEmpty(List()))
+        expect(isFalse, isEmpty(List(1)))
+    })
+
+    describe("it can compare two Lists for equality", () => {
+        expect(isTrue, areEqual(List(1, 2, 3), List(1, 2, 3)))
+        expect(isFalse, areEqual(List(1, 2, 3), List(4, 5, 6)))
+    })
+
+    describe("it can compare different length Lists", () => {
+        expect(isFalse, areEqual(List(1, 2), List(3, 4, 5)))
     })
 
     describe("it calculates length of fixed length lists", () => {
@@ -34,6 +52,13 @@ describe("List", () => {
         assert(
             List("hello", "world", "let's", "go").toString(),
             cons("hello", List("world", "let's", "go")).toString()
+        )
+    })
+
+    describe("it can map over a List", () => {
+        assert(
+            List(2, 4, 6, 8).toString(),
+            map(x => x * 2, List(1, 2, 3, 4)).toString()
         )
     })
 })

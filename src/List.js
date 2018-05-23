@@ -1,6 +1,6 @@
 // module List
 
-import Boolean from "./Boolean"
+import Boolean, { True, False, and } from "./Boolean"
 
 const Nil = "Nil"
 
@@ -37,7 +37,7 @@ List.prototype.toString = function() {
     const h = this._getHead()
     const t = this._getTail()
 
-    if (t === Nil) return "END_LIST"
+    if (t === Nil) return `List(${h}, END_LIST)`
     return `List(${h}, ${t.toString()})`
 }
 
@@ -56,6 +56,38 @@ const fromList = list => fromList_([], list)
 // isList :: a -> Boolean
 const isList = value => Boolean(value instanceof List)
 
+// isEmpty :: List a -> boolean
+const isEmpty = list => Boolean(list._getHead() === Nil)
+
+// length :: List a -> number
+const length = list => {
+    // Empty List
+    if (list._getHead() === Nil) return 0
+
+    // Non-empty List
+    if (list._getTail() === Nil) return 1
+    return 1 + length(list._getTail())
+}
+
+// areEqual :: List a -> List b -> Boolean
+const areEqual = (xs, ys) => {
+    // Empty Lists
+    if (xs._getHead() === Nil && ys._getHead() === Nil) return True()
+
+    // Different length Lists
+    if (length(xs) !== length(ys)) return False()
+
+    // Single element Lists
+    if (xs._getTail() === Nil || ys._getTail() === Nil)
+        return Boolean(xs._getHead() === ys._getHead())
+
+    // Multi element Lists
+    return and(
+        Boolean(xs._getHead() === ys._getHead()),
+        areEqual(xs._getTail(), ys._getTail())
+    )
+}
+
 // head :: List a -> ?a
 const head = list => list._getHead()
 
@@ -65,17 +97,15 @@ const tail = list => list._getTail()
 // cons :: a -> List a -> List a
 const cons = (x, list) => toList(x, list)
 
-// isEmpty :: List a -> boolean
-const isEmpty = list => list._getHead() === Nil
+const map = (mapper, list) => {
+    // Empty List
+    if (list._getHead() === Nil) return list
 
-// length :: List a -> number
-const length = list => {
-    // Empty list
-    if (list._getHead() === Nil) return 0
+    // Single element List
+    if (list._getTail() === Nil) return mapper(list._getHead())
 
-    // Non-empty list
-    if (list._getTail() === Nil) return 1
-    return 1 + length(list._getTail())
+    // Multi element List
+    return cons(mapper(list._getHead()), map(mapper, list._getTail()))
 }
 
 // const reverse = list => {
@@ -84,4 +114,4 @@ const length = list => {
 // }
 
 export default toList
-export { fromList, isList, isEmpty, head, tail, length, cons }
+export { fromList, isList, isEmpty, areEqual, head, tail, length, cons, map }
