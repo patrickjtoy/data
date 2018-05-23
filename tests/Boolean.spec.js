@@ -6,7 +6,9 @@ import Boolean, {
     isTrue,
     isFalse,
     ifElse,
-    areEqual
+    areEqual,
+    and,
+    or
 } from "./Boolean"
 
 describe("Boolean", () => {
@@ -25,15 +27,20 @@ describe("Boolean", () => {
         assert(false, fromBoolean(False()))
     })
 
-    describe("IfElse", () => {
-        describe("it follows the if path", () => {
-            const result = ifElse(isTrue, fromBoolean, () => false, True())
-            assert(true, result)
-        })
+    describe("it follows the if path", () => {
+        const result = ifElse(isTrue, fromBoolean, () => false, True())
+        assert(true, result)
+    })
 
-        describe("it follows the else path", () => {
-            const result = ifElse(isTrue, () => true, fromBoolean, False())
-            assert(false, result)
-        })
+    describe("it follows the else path", () => {
+        const result = ifElse(isTrue, () => true, fromBoolean, False())
+        assert(false, result)
+    })
+
+    describe("it can compare two Booleans", () => {
+        expect(isTrue, and(True(), True()))
+        expect(isFalse, and(True(), False()))
+        expect(isTrue, or(True(), False()))
+        expect(isFalse, or(False(), False()))
     })
 })

@@ -49,5 +49,11 @@ const ifElse = (predicate, ifCase, elseCase, value) =>
 // areEqual :: a -> b -> Boolean
 const areEqual = (x, y) => toBoolean(x === y)
 
+// and :: Boolean -> Boolean -> Boolean
+const and = (x, y) => toBoolean(x instanceof True && y instanceof True)
+
+// or :: Boolean -> Boolean -> Boolean
+const or = (x, y) => toBoolean(x instanceof True || y instanceof True)
+
 export default toBoolean
-export { fromBoolean, True, False, isTrue, isFalse, ifElse, areEqual }
+export { fromBoolean, True, False, isTrue, isFalse, ifElse, areEqual, and, or }
