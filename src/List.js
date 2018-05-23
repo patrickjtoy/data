@@ -97,15 +97,29 @@ const tail = list => list._getTail()
 // cons :: a -> List a -> List a
 const cons = (x, list) => toList(x, list)
 
-const map = (mapper, list) => {
+const map = (mapper, xs) => {
     // Empty List
-    if (list._getHead() === Nil) return list
+    if (xs._getHead() === Nil) return xs
 
     // Single element List
-    if (list._getTail() === Nil) return mapper(list._getHead())
+    if (xs._getTail() === Nil) return mapper(xs._getHead())
 
     // Multi element List
-    return cons(mapper(list._getHead()), map(mapper, list._getTail()))
+    return cons(mapper(xs._getHead()), map(mapper, xs._getTail()))
+}
+
+const filter = (predicate, xs) => {
+    // Empty List
+    if (xs._getHead() === Nil) return xs
+
+    // Single element List
+    if (xs._getTail() === Nil)
+        return predicate(xs._getHead()) === true ? xs : toList()
+
+    // Multi element List
+    return predicate(xs._getHead()) === true
+        ? cons(xs._getHead(), filter(predicate, xs._getTail()))
+        : filter(predicate, xs._getTail())
 }
 
 // const reverse = list => {
@@ -114,4 +128,15 @@ const map = (mapper, list) => {
 // }
 
 export default toList
-export { fromList, isList, isEmpty, areEqual, head, tail, length, cons, map }
+export {
+    fromList,
+    isList,
+    isEmpty,
+    areEqual,
+    head,
+    tail,
+    length,
+    cons,
+    map,
+    filter
+}

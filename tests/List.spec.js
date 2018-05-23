@@ -7,7 +7,8 @@ import List, {
     areEqual,
     length,
     cons,
-    map
+    map,
+    filter
 } from "./List"
 
 describe("List", () => {
@@ -49,16 +50,43 @@ describe("List", () => {
     })
 
     describe("it can prepend a value to a List (cons || ::)", () => {
-        assert(
-            List("hello", "world", "let's", "go").toString(),
-            cons("hello", List("world", "let's", "go")).toString()
+        expect(
+            isTrue,
+            areEqual(
+                List("hello", "world", "let's", "go"),
+                cons("hello", List("world", "let's", "go"))
+            )
         )
     })
 
     describe("it can map over a List", () => {
-        assert(
-            List(2, 4, 6, 8).toString(),
-            map(x => x * 2, List(1, 2, 3, 4)).toString()
+        expect(
+            isTrue,
+            areEqual(List(2, 4, 6, 8), map(x => x * 2, List(1, 2, 3, 4)))
+        )
+        expect(
+            isTrue,
+            areEqual(
+                List("HELLO", "WORLD"),
+                map(x => x.toUpperCase(), List("hello", "world"))
+            )
+        )
+    })
+
+    describe("it can filter a List", () => {
+        expect(
+            isTrue,
+            areEqual(
+                List(2, 4, 6, 8),
+                filter(x => x % 2 === 0, List(1, 2, 3, 4, 5, 6, 7, 8))
+            )
+        )
+        expect(
+            isTrue,
+            areEqual(
+                List("l", "l"),
+                filter(x => x === "l", List("h", "e", "l", "l", "o"))
+            )
         )
     })
 })
