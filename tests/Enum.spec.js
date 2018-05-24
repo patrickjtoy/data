@@ -20,9 +20,9 @@ describe("Enum", () => {
         expect(enum_ => {
             try {
                 enum_.RIGHT = "LEFT"
-                return False()
+                return False
             } catch (error) {
-                return True()
+                return True
             }
         }, POSITIONS)
     })
