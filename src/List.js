@@ -1,6 +1,6 @@
 // module List
 
-import Boolean, { True, False, and } from "./Boolean"
+import Boolean, { True, False, ifElse, caseOf } from "./Boolean"
 
 const Nil = "Nil"
 
@@ -44,14 +44,8 @@ List.prototype.toString = function() {
 // toList :: Array a -> List a
 const toList = (...xs) => List(xs)
 
-// fromList_ :: Array a -> List a -> Array a
-const fromList_ = (xs, ys) => {
-    if (ys._getTail() === Nil) return xs.concat([ys._getHead()])
-    return fromList_(xs.concat([ys._getHead()]), ys._getTail())
-}
-
 // toArray :: List a -> Array a
-const fromList = xs => fromList_([], xs)
+const fromList = xs => foldl((acc, x) => acc.concat([x]), [], xs)
 
 // isList :: a -> Boolean
 const isList = value => Boolean(value instanceof List)
@@ -59,36 +53,8 @@ const isList = value => Boolean(value instanceof List)
 // isEmpty :: List a -> boolean
 const isEmpty = xs => Boolean(xs._getHead() === Nil)
 
-// length :: List a -> number
-const length = xs => {
-    // Empty List
-    if (xs._getHead() === Nil) return 0
-
-    // Single element List
-    if (xs._getTail() === Nil) return 1
-
-    // Multi element List
-    return 1 + length(xs._getTail())
-}
-
-// areEqual :: List a -> List b -> Boolean
-const areEqual = (xs, ys) => {
-    // Empty Lists
-    if (xs._getHead() === Nil && ys._getHead() === Nil) return True()
-
-    // Different length Lists
-    if (length(xs) !== length(ys)) return False()
-
-    // Single element Lists
-    if (xs._getTail() === Nil || ys._getTail() === Nil)
-        return Boolean(xs._getHead() === ys._getHead())
-
-    // Multi element Lists
-    return and(
-        Boolean(xs._getHead() === ys._getHead()),
-        areEqual(xs._getTail(), ys._getTail())
-    )
-}
+// lengthOf :: List a -> number
+const lengthOf = xs => foldl((acc, _) => acc + 1, 0, xs)
 
 // head :: List a -> ?a
 const head = xs => xs._getHead()
@@ -96,64 +62,97 @@ const head = xs => xs._getHead()
 // tail :: List a -> List a
 const tail = xs => xs._getTail()
 
+// foldl :: (a -> b -> b) -> b -> List a -> b
+function foldl(f, x, xs) {
+    // Empty List
+    if (xs._getHead() === Nil) return x
+
+    // Single element List
+    if (xs._getTail() === Nil) return f(x, xs._getHead())
+
+    // Multi element List
+    return foldl(f, f(x, xs._getHead()), xs._getTail())
+}
+
+// foldr :: (a -> b -> b) -> b -> List a -> b
+function foldr(f, x, xs) {
+    // Empty List
+    if (xs._getHead() === Nil) return x
+
+    // Single element List
+    if (xs._getTail() === Nil) return f(xs._getHead(), x)
+
+    // Multi element List
+    return reverse(foldl((acc, y) => f(y, acc), x, xs))
+}
+
+// areEqual :: List a -> List b -> Boolean
+function areEqual(xs, ys) {
+    return caseOf(
+        {
+            [[0, 0]]: Boolean.toTrue,
+            [[1, 1]]: _ => Boolean.areEqual(head(xs), head(ys)),
+            defaultCase: _ =>
+                ifElse(
+                    _ => Boolean.areEqual(lengthOf(xs), lengthOf(ys)),
+                    _ =>
+                        Boolean.and(
+                            Boolean.areEqual(head(xs), head(ys)),
+                            areEqual(tail(xs), tail(ys))
+                        ),
+                    Boolean.toFalse,
+                    Nil
+                )
+        },
+        _ => [lengthOf(xs), lengthOf(ys)],
+        Nil
+    )
+}
+
 // cons :: a -> List a -> List a
-const cons = (x, xs) => toList(x, xs)
-
-const map = (f, xs) => {
-    // Empty List
-    if (xs._getHead() === Nil) return xs
-
-    // Single element List
-    if (xs._getTail() === Nil) return f(xs._getHead())
-
-    // Multi element List
-    return cons(f(xs._getHead()), map(f, xs._getTail()))
+function cons(x, xs) {
+    return ifElse(isEmpty, _ => toList(x), _ => toList(x, xs), xs)
 }
 
-const filter = (p, xs) => {
-    // Empty List
-    if (xs._getHead() === Nil) return xs
-
-    // Single element List
-    if (xs._getTail() === Nil) return p(xs._getHead()) === true ? xs : toList()
-
-    // Multi element List
-    return p(xs._getHead()) === true
-        ? cons(xs._getHead(), filter(p, xs._getTail()))
-        : filter(p, xs._getTail())
+// map :: (a -> b) -> List a -> List b
+function map(f, xs) {
+    return foldr((x, acc) => cons(f(x), acc), toList(), xs)
 }
 
-const reverse_ = (xs, ys) => {
-    // Empty list
-    if (ys._getHead() === Nil) return xs
-
-    // Single element List
-    if (ys._getTail() === Nil) return cons(ys._getHead(), xs)
-
-    // Multi element List
-    return reverse_(cons(ys._getHead(), xs), ys._getTail())
+// filter :: (a -> Boolean) -> List a -> List a
+function filter(p, xs) {
+    return foldr((x, acc) => (p(x) === true ? cons(x, acc) : acc), toList(), xs)
 }
 
-const reverse = xs => {
-    // Empty List
-    if (xs._getHead() === Nil) return xs
-
-    // Single element List
-    if (xs._getTail() === Nil) return xs
-
-    // Multi element List
-    return reverse_(toList(xs._getHead()), xs._getTail())
+// reverse :: List a -> List a
+function reverse(xs) {
+    return foldl((acc, x) => cons(x, acc), toList(), xs)
 }
+
+toList.foldl = foldl
+toList.foldr = foldr
+toList.fromList = fromList
+toList.isList = isList
+toList.isEmpty = isEmpty
+toList.areEqual = areEqual
+toList.head = head
+toList.tail = tail
+toList.lengthOf = lengthOf
+toList.cons = cons
+toList.map = map
+toList.filter = filter
+toList.reverse = reverse
 
 export default toList
 export {
+    foldl,
     fromList,
     isList,
     isEmpty,
     areEqual,
     head,
     tail,
-    length,
+    lengthOf,
     cons,
     map,
     filter,
