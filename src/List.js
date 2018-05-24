@@ -37,7 +37,7 @@ List.prototype.toString = function() {
     const h = this._getHead()
     const t = this._getTail()
 
-    if (t === Nil) return `List(${h}, END_LIST)`
+    if (t === Nil) return `List(${h}, Nil)`
     return `List(${h}, ${t.toString()})`
 }
 
@@ -45,28 +45,30 @@ List.prototype.toString = function() {
 const toList = (...xs) => List(xs)
 
 // fromList_ :: Array a -> List a -> Array a
-const fromList_ = (acc, list) => {
-    if (list._getTail() === Nil) return acc.concat([list._getHead()])
-    return fromList_(acc.concat([list._getHead()]), list._getTail())
+const fromList_ = (xs, ys) => {
+    if (ys._getTail() === Nil) return xs.concat([ys._getHead()])
+    return fromList_(xs.concat([ys._getHead()]), ys._getTail())
 }
 
 // toArray :: List a -> Array a
-const fromList = list => fromList_([], list)
+const fromList = xs => fromList_([], xs)
 
 // isList :: a -> Boolean
 const isList = value => Boolean(value instanceof List)
 
 // isEmpty :: List a -> boolean
-const isEmpty = list => Boolean(list._getHead() === Nil)
+const isEmpty = xs => Boolean(xs._getHead() === Nil)
 
 // length :: List a -> number
-const length = list => {
+const length = xs => {
     // Empty List
-    if (list._getHead() === Nil) return 0
+    if (xs._getHead() === Nil) return 0
 
-    // Non-empty List
-    if (list._getTail() === Nil) return 1
-    return 1 + length(list._getTail())
+    // Single element List
+    if (xs._getTail() === Nil) return 1
+
+    // Multi element List
+    return 1 + length(xs._getTail())
 }
 
 // areEqual :: List a -> List b -> Boolean
@@ -89,43 +91,59 @@ const areEqual = (xs, ys) => {
 }
 
 // head :: List a -> ?a
-const head = list => list._getHead()
+const head = xs => xs._getHead()
 
 // tail :: List a -> List a
-const tail = list => list._getTail()
+const tail = xs => xs._getTail()
 
 // cons :: a -> List a -> List a
-const cons = (x, list) => toList(x, list)
+const cons = (x, xs) => toList(x, xs)
 
-const map = (mapper, xs) => {
+const map = (f, xs) => {
     // Empty List
     if (xs._getHead() === Nil) return xs
 
     // Single element List
-    if (xs._getTail() === Nil) return mapper(xs._getHead())
+    if (xs._getTail() === Nil) return f(xs._getHead())
 
     // Multi element List
-    return cons(mapper(xs._getHead()), map(mapper, xs._getTail()))
+    return cons(f(xs._getHead()), map(f, xs._getTail()))
 }
 
-const filter = (predicate, xs) => {
+const filter = (p, xs) => {
     // Empty List
     if (xs._getHead() === Nil) return xs
 
     // Single element List
-    if (xs._getTail() === Nil)
-        return predicate(xs._getHead()) === true ? xs : toList()
+    if (xs._getTail() === Nil) return p(xs._getHead()) === true ? xs : toList()
 
     // Multi element List
-    return predicate(xs._getHead()) === true
-        ? cons(xs._getHead(), filter(predicate, xs._getTail()))
-        : filter(predicate, xs._getTail())
+    return p(xs._getHead()) === true
+        ? cons(xs._getHead(), filter(p, xs._getTail()))
+        : filter(p, xs._getTail())
 }
 
-// const reverse = list => {
-//     if (isEmpty(list)) return list
-//     reverse(list._getTail()) `concat` List(list._getHead())
-// }
+const reverse_ = (xs, ys) => {
+    // Empty list
+    if (ys._getHead() === Nil) return xs
+
+    // Single element List
+    if (ys._getTail() === Nil) return cons(ys._getHead(), xs)
+
+    // Multi element List
+    return reverse_(cons(ys._getHead(), xs), ys._getTail())
+}
+
+const reverse = xs => {
+    // Empty List
+    if (xs._getHead() === Nil) return xs
+
+    // Single element List
+    if (xs._getTail() === Nil) return xs
+
+    // Multi element List
+    return reverse_(toList(xs._getHead()), xs._getTail())
+}
 
 export default toList
 export {
@@ -138,5 +156,6 @@ export {
     length,
     cons,
     map,
-    filter
+    filter,
+    reverse
 }
