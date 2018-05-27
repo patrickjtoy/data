@@ -1,4 +1,4 @@
-// module Boolean
+import { curry, constant, typeOf } from "./_utils"
 
 const Boolean = function Boolean(x) {
     if (!(this instanceof Boolean)) return new Boolean(x)
@@ -8,54 +8,93 @@ const Boolean = function Boolean(x) {
     this._getValue = () => x
 }
 
-// True :: () => Boolean
-const _True = function _True() {
-    if (!(this instanceof _True)) return new _True()
+const $Boolean$True = function $Boolean$True() {
+    if (!(this instanceof $Boolean$True)) return new $Boolean$True()
 
     Boolean.call(this, true)
 }
-_True.prototype = Object.create(Boolean.prototype)
-_True.prototype.toString = function() {
-    return `Boolean(True)`
-}
+$Boolean$True.prototype = Object.create(Boolean.prototype)
+$Boolean$True.prototype.toString = constant("Boolean(True)")
 
-// False :: () => Boolean
-const _False = function _False() {
-    if (!(this instanceof _False)) return new _False()
+const $Boolean$False = function $Boolean$False() {
+    if (!(this instanceof $Boolean$False)) return new $Boolean$False()
 
     Boolean.call(this, false)
 }
-_False.prototype = Object.create(Boolean.prototype)
-_False.prototype.toString = function() {
-    return `Boolean(False)`
+$Boolean$False.prototype = Object.create(Boolean.prototype)
+$Boolean$False.prototype.toString = constant("Boolean(False)")
+
+const True = $Boolean$True()
+const False = $Boolean$False()
+
+// toBoolean
+// =========
+function $Boolean$toBoolean(jsBool) {
+    return jsBool === true ? True : False
 }
+$Boolean$toBoolean["@@type"] = "toBoolean :: boolean -> Boolean"
+$Boolean$toBoolean["toString"] = constant($Boolean$toBoolean["@@type"])
 
-const True = _True()
-const False = _False()
+// fromBoolean
+// ===========
+function $Boolean$fromBoolean(boolean) {
+    return boolean instanceof $Boolean$True
+}
+$Boolean$fromBoolean["@@type"] = "fromBoolean :: Boolean -> boolean"
+$Boolean$fromBoolean["toString"] = constant($Boolean$fromBoolean["@@type"])
 
-// toBoolean :: boolean -> Boolean
-const toBoolean = jsBool => (jsBool === true ? True : False)
+// toTrue
+// ======
+function $Boolean$toTrue() {
+    return True
+}
+$Boolean$toTrue["@@type"] = "toTrue :: Boolean"
+$Boolean$toTrue["toString"] = constant($Boolean$toTrue["@@type"])
 
-// fromBoolean :: Boolean -> boolean
-const fromBoolean = boolean => boolean instanceof _True
+// toFalse
+// =======
+function $Boolean$toFalse() {
+    return False
+}
+$Boolean$toFalse["@@type"] = "toFalse :: Boolean"
+$Boolean$toFalse["toString"] = constant($Boolean$toFalse["@@type"])
 
-// toTrue :: Boolean
-const toTrue = _True
+// isTrue
+// ======
+function $Boolean$isTrue(boolean) {
+    return $Boolean$toBoolean(boolean instanceof $Boolean$True)
+}
+$Boolean$isTrue["@@type"] = "isTrue :: Boolean -> Boolean"
+$Boolean$isTrue["toString"] = constant($Boolean$isTrue["@@type"])
 
-// toFalse :: Boolean
-const toFalse = _False
+// isFalse
+// =======
+function $Boolean$isFalse(boolean) {
+    return $Boolean$toBoolean(boolean instanceof $Boolean$False)
+}
+$Boolean$isFalse["@@type"] = "isFalse :: Boolean -> Boolean"
+$Boolean$isFalse["toString"] = constant($Boolean$isFalse["@@type"])
 
-// isTrue :: Boolean -> Boolean
-const isTrue = boolean => toBoolean(boolean instanceof _True)
+// not
+// ===
+function $Boolean$not(boolean) {
+    return $Boolean$toBoolean(boolean instanceof $Boolean$False)
+}
+$Boolean$not["@@type"] = "not :: Boolean -> Boolean"
+$Boolean$not["toString"] = constant($Boolean$not["@@type"])
 
-// isFalse :: Boolean -> Boolean
-const isFalse = boolean => toBoolean(boolean instanceof _False)
+// ifElse
+// ======
+function $Boolean$ifElse(p, t, f, x) {
+    return $Boolean$fromBoolean(p(x)) ? t(x) : f(x)
+}
+$Boolean$ifElse["@@type"] =
+    "ifElse :: (a -> Boolean) -> (a -> b) -> (a -> b) -> a -> b"
+$Boolean$ifElse["toString"] = constant($Boolean$ifElse["@@type"])
 
-// ifElse :: (a -> Boolean) -> (a -> b) -> (a -> b) -> a -> b
-const ifElse = (predicate, ifCase, elseCase, value) =>
-    fromBoolean(predicate(value)) ? ifCase(value) : elseCase(value)
-
-const caseOf = (cases, someCaseFrom, value) => {
+// caseOf
+// ======
+function $Boolean$caseOf(cases, someCaseFrom, value) {
     if (!cases.hasOwnProperty("defaultCase"))
         throw new TypeError(
             "Expected cases to include a default case, but none was provided."
@@ -66,32 +105,63 @@ const caseOf = (cases, someCaseFrom, value) => {
         ? cases[someCase](value)
         : cases.defaultCase(value)
 }
+$Boolean$caseOf["@@type"] = "caseOf :: Dict b (a -> c) -> (a -> b) -> a -> c"
+$Boolean$caseOf["toString"] = constant($Boolean$caseOf["@@type"])
 
-// areEqual :: a -> b -> Boolean
-const areEqual = (x, y) => toBoolean(x === y)
+// areEqual
+// ========
+function $Boolean$areEqual(x, y) {
+    return $Boolean$toBoolean(x === y)
+}
+$Boolean$areEqual["@@type"] = "areEqual :: a -> b -> Boolean"
+$Boolean$areEqual["toString"] = constant($Boolean$areEqual["@@type"])
 
-// and :: Boolean -> Boolean -> Boolean
-const and = (x, y) => toBoolean(x instanceof _True && y instanceof _True)
+// and
+// ===
+function $Boolean$and(x, y) {
+    return $Boolean$toBoolean(
+        x instanceof $Boolean$True && y instanceof $Boolean$True
+    )
+}
+$Boolean$and["@@type"] = "and :: Boolean -> Boolean -> Boolean"
+$Boolean$and["toString"] = constant($Boolean$and["@@type"])
 
-// or :: Boolean -> Boolean -> Boolean
-const or = (x, y) => toBoolean(x instanceof _True || y instanceof _True)
+// or
+// ==
+function $Boolean$or(x, y) {
+    return $Boolean$toBoolean(
+        x instanceof $Boolean$True || y instanceof $Boolean$True
+    )
+}
+$Boolean$or["@@type"] = "or :: Boolean -> Boolean -> Boolean"
+$Boolean$or["toString"] = constant($Boolean$or["@@type"])
 
-toBoolean.fromBoolean = fromBoolean
-toBoolean.areEqual = areEqual
-toBoolean.True = True
-toBoolean.False = False
-toBoolean.toTrue = toTrue
-toBoolean.toFalse = toFalse
-toBoolean.isTrue = isTrue
-toBoolean.isFalse = isFalse
-toBoolean.ifElse = ifElse
-toBoolean.caseOf = caseOf
-toBoolean.areEqual = areEqual
-toBoolean.and = and
-toBoolean.or = or
+// isTypeOf
+// ========
+function $Boolean$isTypeOf(type, x) {
+    return $Boolean$areEqual(type, typeOf(x))
+}
+$Boolean$isTypeOf["@@type"] = "isTypeOf :: string -> a -> Boolean"
+$Boolean$isTypeOf["toString"] = constant($Boolean$isTypeOf["@@type"])
 
-export default toBoolean
-export {
+// EXPORTS
+
+const toBoolean = curry($Boolean$toBoolean)
+const fromBoolean = curry($Boolean$fromBoolean)
+const toTrue = curry($Boolean$toTrue)
+const toFalse = curry($Boolean$toFalse)
+const isTrue = curry($Boolean$isTrue)
+const isFalse = curry($Boolean$isFalse)
+const not = curry($Boolean$not)
+const areEqual = curry($Boolean$areEqual)
+const ifElse = curry($Boolean$ifElse)
+const caseOf = curry($Boolean$caseOf)
+const and = curry($Boolean$and)
+const or = curry($Boolean$or)
+const isTypeOf = curry($Boolean$isTypeOf)
+
+// Qualified
+Object.entries({
     fromBoolean,
     True,
     False,
@@ -99,9 +169,31 @@ export {
     toFalse,
     isTrue,
     isFalse,
+    not,
+    areEqual,
     ifElse,
     caseOf,
-    areEqual,
     and,
-    or
+    or,
+    isTypeOf
+}).forEach(([key, value]) => (toBoolean[key] = value))
+export default toBoolean
+
+// Non-qualified
+export {
+    toBoolean,
+    fromBoolean,
+    True,
+    False,
+    toTrue,
+    toFalse,
+    isTrue,
+    isFalse,
+    not,
+    areEqual,
+    ifElse,
+    caseOf,
+    and,
+    or,
+    isTypeOf
 }
