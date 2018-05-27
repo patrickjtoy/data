@@ -1,5 +1,4 @@
-// module List
-
+import { curry, constant } from "./_utils"
 import Boolean, { True, False, ifElse, caseOf } from "./Boolean"
 
 const Nil = "Nil"
@@ -33,128 +32,250 @@ const List = function List(xs) {
     }
 }
 
-List.prototype.toString = function() {
+List.prototype.toString = function(count) {
+    const c = count === undefined ? 0 : count
     const h = this._getHead()
     const t = this._getTail()
 
-    if (t === Nil) return `List(${h}, Nil)`
-    return `List(${h}, ${t.toString()})`
+    if (t === Nil) return `${h})`
+    return c === 0
+        ? `List(${h}, ${t.toString(c + 1)}`
+        : `${h}, ${t.toString(c + 1)}`
 }
 
-// toList :: Array a -> List a
-const toList = (...xs) => List(xs)
+// toList
+// ======
+function $List$toList(...xs) {
+    return new List(xs)
+}
+$List$toList["@@type"] = "toList :: Array a -> List a"
+$List$toList["toString"] = constant($List$toList["@@type"])
 
-// toArray :: List a -> Array a
-const fromList = xs => foldl((acc, x) => acc.concat([x]), [], xs)
+// fromList
+// ========
+function $List$fromList(xs) {
+    return $List$foldl((acc, x) => acc.concat([x]), [], xs)
+}
+$List$fromList["@@type"] = "fromList :: List a -> Array a"
+$List$fromList["toString"] = constant($List$fromList["@@type"])
 
-// isList :: a -> Boolean
-const isList = value => Boolean(value instanceof List)
+// isList
+// ======
+function $List$isList(value) {
+    return Boolean(value instanceof List)
+}
+$List$isList["@@type"] = "isList :: a -> Boolean"
+$List$isList["toString"] = constant($List$isList["@@type"])
 
-// isEmpty :: List a -> boolean
-const isEmpty = xs => Boolean(xs._getHead() === Nil)
+// isEmpty
+// =======
+function $List$isEmpty(xs) {
+    return Boolean($List$head(xs) === Nil)
+}
+$List$isEmpty["@@type"] = "isEmpty :: List a -> boolean"
+$List$isEmpty["toString"] = constant($List$isEmpty["@@type"])
 
-// lengthOf :: List a -> number
-const lengthOf = xs => foldl((acc, _) => acc + 1, 0, xs)
+// lengthOf
+// ========
+function $List$lengthOf(xs) {
+    return $List$foldl((acc, _) => acc + 1, 0, xs)
+}
+$List$lengthOf["@@type"] = "lengthOf :: List a -> number"
+$List$lengthOf["toString"] = constant($List$lengthOf["@@type"])
 
-// head :: List a -> ?a
-const head = xs => xs._getHead()
+// head
+// ====
+function $List$head(xs) {
+    return xs._getHead()
+}
+$List$head["@@type"] = "head :: List a -> ?a"
+$List$head["toString"] = constant($List$head["@@type"])
 
-// tail :: List a -> List a
-const tail = xs => xs._getTail()
+// tail
+// ====
+function $List$tail(xs) {
+    return xs._getTail()
+}
+$List$tail["@@type"] = "tail :: List a -> List a"
+$List$tail["toString"] = constant($List$tail["@@type"])
 
-// foldl :: (a -> b -> b) -> b -> List a -> b
-function foldl(f, x, xs) {
+// foldl
+// =====
+function $List$foldl(f, x, xs) {
     // Empty List
-    if (xs._getHead() === Nil) return x
+    if ($List$head(xs) === Nil) return x
 
     // Single element List
-    if (xs._getTail() === Nil) return f(x, xs._getHead())
+    if ($List$tail(xs) === Nil) return f(x, $List$head(xs))
 
     // Multi element List
-    return foldl(f, f(x, xs._getHead()), xs._getTail())
+    return $List$foldl(f, f(x, $List$head(xs)), $List$tail(xs))
 }
+$List$foldl["@@type"] = "foldl :: (a -> b -> b) -> b -> List a -> b"
+$List$foldl["toString"] = constant($List$foldl["@@type"])
 
-// foldr :: (a -> b -> b) -> b -> List a -> b
-function foldr(f, x, xs) {
+// foldr
+// =====
+function $List$foldr(f, x, xs) {
     // Empty List
-    if (xs._getHead() === Nil) return x
+    if ($List$head(xs) === Nil) return x
 
     // Single element List
-    if (xs._getTail() === Nil) return f(xs._getHead(), x)
+    if ($List$tail(xs) === Nil) return f($List$head(xs), x)
 
     // Multi element List
-    return reverse(foldl((acc, y) => f(y, acc), x, xs))
+    return $List$reverse($List$foldl((acc, y) => f(y, acc), x, xs))
 }
+$List$foldr["@@type"] = "foldr :: (a -> b -> b) -> b -> List a -> b"
+$List$foldr["toString"] = constant($List$foldr["@@type"])
 
-// areEqual :: List a -> List b -> Boolean
-function areEqual(xs, ys) {
+// areEqual
+// ========
+function $List$areEqual(xs, ys) {
     return caseOf(
         {
             [[0, 0]]: Boolean.toTrue,
-            [[1, 1]]: _ => Boolean.areEqual(head(xs), head(ys)),
+            [[1, 1]]: _ => Boolean.areEqual($List$head(xs), $List$head(ys)),
             defaultCase: _ =>
                 ifElse(
-                    _ => Boolean.areEqual(lengthOf(xs), lengthOf(ys)),
+                    _ =>
+                        Boolean.areEqual(
+                            $List$lengthOf(xs),
+                            $List$lengthOf(ys)
+                        ),
                     _ =>
                         Boolean.and(
-                            Boolean.areEqual(head(xs), head(ys)),
-                            areEqual(tail(xs), tail(ys))
+                            Boolean.areEqual($List$head(xs), $List$head(ys)),
+                            areEqual($List$tail(xs), $List$tail(ys))
                         ),
                     Boolean.toFalse,
                     Nil
                 )
         },
-        _ => [lengthOf(xs), lengthOf(ys)],
+        _ => [$List$lengthOf(xs), $List$lengthOf(ys)],
         Nil
     )
 }
+$List$areEqual["@@type"] = "areEqual :: List a -> List b -> Boolean"
+$List$areEqual["toString"] = constant($List$areEqual["@@type"])
 
-// cons :: a -> List a -> List a
-function cons(x, xs) {
-    return ifElse(isEmpty, _ => toList(x), _ => toList(x, xs), xs)
+// cons
+// ====
+function $List$cons(x, xs) {
+    return ifElse(isEmpty, _ => $List$toList(x), _ => $List$toList(x, xs), xs)
 }
+$List$cons["@@type"] = "cons :: a -> List a -> List a"
+$List$cons["toString"] = constant($List$cons["@@type"])
 
-// map :: (a -> b) -> List a -> List b
-function map(f, xs) {
-    return foldr((x, acc) => cons(f(x), acc), toList(), xs)
+// map
+// ===
+function $List$map(f, xs) {
+    return $List$foldr((x, acc) => $List$cons(f(x), acc), $List$toList(), xs)
 }
+$List$map["@@type"] = "map :: (a -> b) -> List a -> List b"
+$List$map["toString"] = constant($List$map["@@type"])
 
-// filter :: (a -> Boolean) -> List a -> List a
-function filter(p, xs) {
-    return foldr((x, acc) => (p(x) === true ? cons(x, acc) : acc), toList(), xs)
+// filter
+// ======
+function $List$filter(p, xs) {
+    return $List$foldr(
+        (x, acc) => (p(x) === true ? $List$cons(x, acc) : acc),
+        $List$toList(),
+        xs
+    )
 }
+$List$filter["@@type"] = "filter :: (a -> Boolean) -> List a -> List a"
+$List$filter["toString"] = constant($List$filter["@@type"])
 
-// reverse :: List a -> List a
-function reverse(xs) {
-    return foldl((acc, x) => cons(x, acc), toList(), xs)
+// reverse
+// =======
+function $List$reverse(xs) {
+    return $List$foldl((acc, x) => $List$cons(x, acc), $List$toList(), xs)
 }
+$List$reverse["@@type"] = "reverse :: List a -> List a"
+$List$reverse["toString"] = constant($List$reverse["@@type"])
 
-toList.foldl = foldl
-toList.foldr = foldr
-toList.fromList = fromList
-toList.isList = isList
-toList.isEmpty = isEmpty
-toList.areEqual = areEqual
-toList.head = head
-toList.tail = tail
-toList.lengthOf = lengthOf
-toList.cons = cons
-toList.map = map
-toList.filter = filter
-toList.reverse = reverse
+// every
+// ========
+function $List$every(p, xs) {
+    return $List$foldl(
+        (acc, x) =>
+            ifElse(Boolean.isFalse, Boolean.toFalse, constant(p(x)), acc),
+        True,
+        xs
+    )
+}
+$List$every["@@type"] = "every :: (a -> Boolean) -> List a -> Boolean"
+$List$every["toString"] = constant($List$every["@@type"])
 
-export default toList
-export {
-    foldl,
+// elem
+// ====
+function $List$elem(x, xs) {
+    return $List$foldl(
+        (acc, y) =>
+            ifElse(Boolean.areEqual(x), Boolean.toTrue, constant(acc), y),
+        False,
+        xs
+    )
+}
+$List$elem["@@type"] = "elem :: a -> List a -> Boolean"
+$List$elem["toString"] = constant($List$elem["@@type"])
+
+// EXPORTS
+
+const toList = $List$toList
+const fromList = curry($List$fromList)
+const isList = curry($List$isList)
+const isEmpty = curry($List$isEmpty)
+const areEqual = curry($List$areEqual)
+const head = curry($List$head)
+const tail = curry($List$tail)
+const foldl = curry($List$foldl)
+const foldr = curry($List$foldr)
+const lengthOf = curry($List$lengthOf)
+const cons = curry($List$cons)
+const map = curry($List$map)
+const filter = curry($List$filter)
+const reverse = curry($List$reverse)
+const every = curry($List$every)
+const elem = curry($List$elem)
+
+// Qualified
+Object.entries({
     fromList,
     isList,
     isEmpty,
     areEqual,
     head,
     tail,
+    foldl,
+    foldr,
     lengthOf,
     cons,
     map,
     filter,
-    reverse
+    reverse,
+    every,
+    elem
+}).forEach(([key, value]) => (toList[key] = value))
+export default toList
+
+// Non-qualified
+export {
+    toList,
+    fromList,
+    isList,
+    isEmpty,
+    areEqual,
+    head,
+    tail,
+    foldl,
+    foldr,
+    lengthOf,
+    cons,
+    map,
+    filter,
+    reverse,
+    every,
+    elem
 }

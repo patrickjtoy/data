@@ -1,12 +1,10 @@
 import { describe, assert, expect } from "./_testRunner"
-import { isTrue, isFalse } from "./Boolean"
+import Boolean, { isTrue, isFalse } from "./Boolean"
 import List from "./List"
 
 describe("List", () => {
     describe("it creates a List", () => {
-        const list = List(1, 2, 3)
-
-        expect(List.isList, list)
+        expect(List.isList, List(1, 2, 3))
     })
 
     describe("it can foldl a List", () => {
@@ -96,5 +94,15 @@ describe("List", () => {
                 List.reverse(List(1, 2, 3, 4, 5, 6, 7, 8, 9, 10))
             )
         )
+    })
+
+    describe("it can validate every element with a given predicate", () => {
+        expect(isTrue, List.every(x => Boolean(x > 0), List(1, 2, 3)))
+        expect(isFalse, List.every(x => Boolean(x < 5), List(4, 5, 6)))
+    })
+
+    describe("it can determine if a value is in a List", () => {
+        expect(isTrue, List.elem(1, List(1, 2, 3)))
+        expect(isFalse, List.elem(3, List(4, 5, 6)))
     })
 })
