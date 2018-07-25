@@ -144,6 +144,14 @@ function $Boolean$isTypeOf(type, x) {
 $Boolean$isTypeOf["@@type"] = "isTypeOf :: string -> a -> Boolean"
 $Boolean$isTypeOf["toString"] = constant($Boolean$isTypeOf["@@type"])
 
+// isInstanceOf
+// ============
+function $Boolean$isInstanceOf(cls) {
+    return function(x) {
+        return $Boolean$toBoolean(x instanceof cls)
+    }
+}
+
 // EXPORTS
 
 const toBoolean = curry($Boolean$toBoolean)
@@ -177,6 +185,7 @@ Object.entries({
     or,
     isTypeOf
 }).forEach(([key, value]) => (toBoolean[key] = value))
+toBoolean["isInstanceOf"] = $Boolean$isInstanceOf
 export default toBoolean
 
 // Non-qualified
@@ -195,5 +204,6 @@ export {
     caseOf,
     and,
     or,
-    isTypeOf
+    isTypeOf,
+    $Boolean$isInstanceOf as isInstanceOf
 }
