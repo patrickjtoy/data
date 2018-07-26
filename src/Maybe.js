@@ -1,3 +1,4 @@
+import { constant } from "./_utils"
 import Boolean from "./Boolean"
 
 const $Maybe = function(x) {
@@ -16,11 +17,21 @@ const $Maybe$Just = function(x) {
     this._value = x
 }
 
+$Maybe$Nothing.prototype.toString = function() {
+    return "Nothing"
+}
+
+$Maybe$Just.prototype.toString = function() {
+    return `Just(${this._value})`
+}
+
 // toMaybe
 // =======
 function $Maybe$toMaybe(x) {
     return new $Maybe(x)
 }
+$Maybe$toMaybe["@@type"] = "toMaybe :: a -> Maybe a"
+$Maybe$toMaybe["toString"] = constant($Maybe$toMaybe["@@type"])
 
 // fromMaybe
 // =========
@@ -34,18 +45,24 @@ function $Maybe$fromMaybe(fallback) {
         )
     }
 }
+$Maybe$fromMaybe["@@type"] = "fromMaybe :: a -> Maybe a -> a"
+$Maybe$fromMaybe["toString"] = constant($Maybe$fromMaybe["@@type"])
 
 // isNothing
 // =========
 function $Maybe$isNothing(x) {
     return Boolean.isInstanceOf($Maybe$Nothing)(x)
 }
+$Maybe$isNothing["@@type"] = "isNothing :: Maybe a -> Boolean"
+$Maybe$isNothing["toString"] = constant($Maybe$isNothing["@@type"])
 
 // isJust
 // ======
 function $Maybe$isJust(x) {
     return Boolean.isInstanceOf($Maybe$Just)(x)
 }
+$Maybe$isJust["@@type"] = "isJust :: Maybe a -> Boolean"
+$Maybe$isJust["toString"] = constant($Maybe$isJust["@@type"])
 
 // map
 // ===
@@ -59,6 +76,8 @@ function $Maybe$map(fn) {
         )
     }
 }
+$Maybe$map["@@type"] = "map :: (a -> b) -> Maybe a -> Maybe b"
+$Maybe$map["toString"] = constant($Maybe$map["@@type"])
 
 // EXPORTS
 
