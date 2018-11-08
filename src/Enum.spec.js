@@ -1,16 +1,16 @@
 import { describe, assert, expect } from "./_testRunner"
-import Enum, { isEnum } from "./Enum"
-import { False, True } from "./Boolean"
+import Enum from "./Enum"
+import Boolean from "./Boolean"
 
 describe("Enum", () => {
     describe("it constructs an Enum", () => {
-        expect(isEnum, Enum("TOP", "MIDDLE", "BOTTOM"))
+        expect(Enum.isEnum, Enum("TOP", "MIDDLE", "BOTTOM"))
     })
 
     describe("it only allows string values", () => {
         // This will throw
         // Enum(1, 2, 3)
-        assert(True, True)
+        assert(Boolean.True, Boolean.True)
     })
 
     describe("it gets the correct value", () => {
@@ -25,9 +25,9 @@ describe("Enum", () => {
         expect(enum_ => {
             try {
                 enum_.RIGHT = "LEFT"
-                return False
+                return Boolean.False
             } catch (error) {
-                return True
+                return Boolean.True
             }
         }, POSITIONS)
     })

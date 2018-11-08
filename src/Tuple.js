@@ -44,7 +44,7 @@ const mapFirst = (mapper, tuple) =>
 const mapSecond = (mapper, tuple) =>
     Tuple(tuple._getFirst(), mapper(tuple._getSecond()))
 
-// isTuple :: a -> Boolean
+// isTuple :: a -> $Boolean
 const isTuple = value => Boolean(value instanceof Tuple)
 
 export default toTuple

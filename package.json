@@ -11,14 +11,13 @@
     ],
     "scripts": {
         "build": "babel src -d lib",
-        "build-tests": "babel tests -d lib",
-        "test-boolean": "babel src/Boolean.js -o lib/Boolean.js ; babel tests/Boolean.spec.js -o lib/Boolean.spec.js ; node lib/Boolean.spec.js",
-        "test-enum": "babel src/Enum.js -o lib/Enum.js ; babel tests/Enum.spec.js -o lib/Enum.spec.js ; node lib/Enum.spec.js",
-        "test-maybe": "babel src/Maybe.js -o lib/Maybe.js ; babel tests/Maybe.spec.js -o lib/Maybe.spec.js ; node lib/Maybe.spec.js",
-        "test-number": "babel src/Number.js -o lib/Number.js ; babel tests/Number.spec.js -o lib/Number.spec.js ; node lib/Number.spec.js",
-        "test-list": "babel src/List.js -o lib/List.js ; babel tests/List.spec.js -o lib/List.spec.js ; node lib/List.spec.js",
-        "test-tuple": "babel src/Tuple.js -o lib/Tuple.js ; babel tests/Tuple.spec.js -o lib/Tuple.spec.js ; node lib/Tuple.spec.js",
-        "test": "yarn build ; yarn build-tests ; node lib/Boolean.spec.js ; node lib/Enum.spec.js ; node lib/Maybe.spec.js ; node lib/Number.spec.js ; node lib/List.spec.js ; node lib/Tuple.spec.js"
+        "test-boolean": "babel src/Boolean.js -o lib/Boolean.js ; babel src/Boolean.spec.js -o lib/Boolean.spec.js ; node lib/Boolean.spec.js",
+        "test-enum": "babel src/Enum.js -o lib/Enum.js ; babel src/Enum.spec.js -o lib/Enum.spec.js ; node lib/Enum.spec.js",
+        "test-maybe": "babel src/Maybe.js -o lib/Maybe.js ; babel src/Maybe.spec.js -o lib/Maybe.spec.js ; node lib/Maybe.spec.js",
+        "test-number": "babel src/Number.js -o lib/Number.js ; babel src/Number.spec.js -o lib/Number.spec.js ; node lib/Number.spec.js",
+        "test-list": "babel src/List.js -o lib/List.js ; babel src/List.spec.js -o lib/List.spec.js ; node lib/List.spec.js",
+        "test-tuple": "babel src/Tuple.js -o lib/Tuple.js ; babel src/Tuple.spec.js -o lib/Tuple.spec.js ; node lib/Tuple.spec.js",
+        "test": "yarn build ; node lib/Boolean.spec.js ; node lib/Enum.spec.js ; node lib/Maybe.spec.js ; node lib/Number.spec.js ; node lib/List.spec.js ; node lib/Tuple.spec.js"
     },
     "devDependencies": {
         "babel-cli": "^6.26.0",

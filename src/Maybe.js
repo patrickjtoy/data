@@ -53,7 +53,7 @@ $Maybe$fromMaybe["toString"] = constant($Maybe$fromMaybe["@@type"])
 function $Maybe$isNothing(x) {
     return Boolean.isInstanceOf($Maybe$Nothing)(x)
 }
-$Maybe$isNothing["@@type"] = "isNothing :: Maybe a -> Boolean"
+$Maybe$isNothing["@@type"] = "isNothing :: Maybe a -> $Boolean"
 $Maybe$isNothing["toString"] = constant($Maybe$isNothing["@@type"])
 
 // isJust
@@ -61,7 +61,7 @@ $Maybe$isNothing["toString"] = constant($Maybe$isNothing["@@type"])
 function $Maybe$isJust(x) {
     return Boolean.isInstanceOf($Maybe$Just)(x)
 }
-$Maybe$isJust["@@type"] = "isJust :: Maybe a -> Boolean"
+$Maybe$isJust["@@type"] = "isJust :: Maybe a -> $Boolean"
 $Maybe$isJust["toString"] = constant($Maybe$isJust["@@type"])
 
 // map
@@ -82,19 +82,8 @@ $Maybe$map["toString"] = constant($Maybe$map["@@type"])
 // EXPORTS
 
 const Maybe = $Maybe$toMaybe
-
-// Qualified
 Maybe["fromMaybe"] = $Maybe$fromMaybe
 Maybe["isNothing"] = $Maybe$isNothing
 Maybe["isJust"] = $Maybe$isJust
 Maybe["map"] = $Maybe$map
 export default Maybe
-
-// Non-qualified
-export {
-    $Maybe$toMaybe as toMaybe,
-    $Maybe$fromMaybe as fromMaybe,
-    $Maybe$isNothing as isNothing,
-    $Maybe$isJust as isJust,
-    $Maybe$map as map
-}

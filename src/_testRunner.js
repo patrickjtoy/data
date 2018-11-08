@@ -1,5 +1,5 @@
 import colors from "colors/safe"
-import { isTrue, ifElse, areEqual } from "./Boolean"
+import Boolean from "./Boolean"
 
 let counter = 0
 
@@ -34,8 +34,8 @@ const describe = (desc, cb) => {
 
 // assert :: a -> b -> c
 const assert = (expected, actual) =>
-    ifElse(
-        isTrue,
+    Boolean.ifElse(
+      Boolean.isTrue,
         () => {
             console.log(colors.green("Success!"))
         },
@@ -46,12 +46,12 @@ const assert = (expected, actual) =>
                 )}: expected result of '${actual}' to equal '${expected}', but it does not!`
             )
         },
-        areEqual(expected, actual)
+        Boolean.areEqual(expected, actual)
     )
 
-// expect :: (a -> Boolean) -> a -> b
+// expect :: (a -> $Boolean) -> a -> b
 const expect = (withActual, actual) =>
-    ifElse(
+    Boolean.ifElse(
         withActual,
         () => {
             console.log(colors.green("Success!"))
