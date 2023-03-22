@@ -1,19 +1,20 @@
-#### Simple immutable data structures in Javascript
+#### Simple immutable data structures in TypeSript
 
-Completed:
-
-*   Tuple
-*   Boolean
+Note: This is a learning project, not meant for production use.
 
 In Progress:
 
-*   List
-*   Number
-*   Enum
+- Tuple
+- Boolean
+- Integer
+- Dict
 
 Todo:
 
-*   Dict
-*   Result
-*   Maybe
-*   ...
+- Float
+- Enum
+- List
+- Dict
+- Either
+- Option
+- ...
