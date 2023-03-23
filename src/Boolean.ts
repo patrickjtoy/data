@@ -22,13 +22,6 @@ export function of(x: boolean): Boolean {
   return x ? True : False
 }
 
-// Destructor
-
-// fromBoolean :: Boolean -> boolean
-export function fromBoolean(x: Boolean): boolean {
-  return x.value === "True"
-}
-
 // Functions
 
 // isBoolean :: a -> boolean
